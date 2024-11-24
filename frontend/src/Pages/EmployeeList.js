@@ -6,6 +6,9 @@ import api from '../API_URL/api';
 
 export default function EmployeeList() {
     const nav = useNavigate();
+    const [load, setload] = useState(false);
+    const [loadingId, setLoadingId] = useState(null); 
+    const [loadingId1, setLoadingId1] = useState(null);
 
     useEffect(() => {
         const username = localStorage.getItem('username');
@@ -14,15 +17,16 @@ export default function EmployeeList() {
         }
     }, [nav]);
 
-    const [employees, setEmployees] = useState([]); 
-    const [searchTerm, setSearchTerm] = useState(''); 
+    const [employees, setEmployees] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [totalCount, setTotalCount] = useState(0);
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1); 
+    const [totalPages, setTotalPages] = useState(1);
     const [sortBy, setSortBy] = useState('name');
     const [sortOrder] = useState('asc');
 
     useEffect(() => {
+        setload(true);
         const fetchEmployees = async () => {
             try {
                 const response = await api.get('/employees', {
@@ -31,7 +35,7 @@ export default function EmployeeList() {
                         page,
                         limit: 10,
                         sortBy,
-                        order: sortOrder, 
+                        order: sortOrder,
                     },
                     withCredentials: true,
                 });
@@ -43,17 +47,23 @@ export default function EmployeeList() {
             } catch (error) {
                 console.error('Error fetching employee data:', error);
             }
+            finally {
+                setload(false);
+            }
         };
 
         fetchEmployees();
     }, [searchTerm, page, sortBy]);
 
     const toggleStatus = async (employeeId, currentStatus) => {
+        setLoadingId(employeeId); 
+        setLoadingId1(null);
         try {
             const response = await api.put(`/employees/${employeeId}/status`, {
                 isActive: !currentStatus,
             });
             if (response.status === 200) {
+                // Update employee status locally
                 setEmployees((prev) =>
                     prev.map((employee) =>
                         employee._id === employeeId
@@ -64,10 +74,13 @@ export default function EmployeeList() {
             }
         } catch (error) {
             console.error('Error toggling status:', error);
+        } finally {
+            setLoadingId(null); // Clear loading state for the button
         }
     };
 
     const deleteEmployee = async (employeeId) => {
+        setLoadingId1(employeeId);
         try {
             const response = await api.delete(`/employees/${employeeId}`);
             if (response.status === 200) {
@@ -81,6 +94,9 @@ export default function EmployeeList() {
             console.error('Error deleting employee:', error);
             alert('Error deleting employee');
         }
+        finally{
+            setLoadingId1(null);
+        }
     };
 
     // Handle pagination
@@ -90,7 +106,7 @@ export default function EmployeeList() {
         }
     };
     const handleSortChange = (e) => {
-        setSortBy(e.target.value); 
+        setSortBy(e.target.value);
     };
 
     return (
@@ -106,7 +122,7 @@ export default function EmployeeList() {
             </div>
             <div className='data'>
                 <div className='emp'></div>
-            <div className='sort search'>
+                <div className='sort search'>
                     <label htmlFor="sortBy" className='tit'>Sort By:</label>
                     <select id="sortBy" value={sortBy} onChange={handleSortChange} className='sel' >
                         <option value="name">Name</option>
@@ -134,43 +150,63 @@ export default function EmployeeList() {
                 <p className='col'>Created Date</p>
                 <p className='col'>Status</p>
                 <p className='col bor'>Action</p>
-                {employees?.map((employee) => (
-                    <>
-                        <p className='col1'>{((page-1)*10)+employees.indexOf(employee)+1}</p>
-                        <div className='imgdiv'>
-                            <img
-                                src={employee.image}
-                                className='img'
-                                alt='profile-pic'
-                                width={70}
-                                height={70}
-                            />
-                        </div>
-                        <p className='col1'>{employee.name}</p>
-                        <p className='col1'>{employee.email}</p>
-                        <p className='col1'>{employee.mobile}</p>
-                        <p className='col1'>{employee.designation}</p>
-                        <p className='col1'>{employee.gender}</p>
-                        <p className='col1'>{employee.course.join(', ')}</p>
-                        <p className='col1'>{new Date(employee.createdAt).toLocaleDateString()}</p>
-                        <p className='status'>
-                            <p className={employee.isActive ? 'active' : 'inactive'}>
-                                <span className={employee.isActive ? 'dota' : 'dotd'}></span>
-                                <span>{employee.isActive ? 'Active' : 'Inactive'}</span>
+                {
+                    load ? <div className='load'>
+                        <p>Loading....</p>
+                    </div> : ""
+                }
+                {
+                    !load ? employees?.map((employee) => (
+                        <>
+                            <p className='col1'>{((page - 1) * 10) + employees.indexOf(employee) + 1}</p>
+                            <div className='imgdiv'>
+                                <img
+                                    src={employee.image}
+                                    className='img'
+                                    alt='profile-pic'
+                                    width={70}
+                                    height={70}
+                                />
+                            </div>
+                            <p className='col1'>{employee.name}</p>
+                            <p className='col1'>{employee.email}</p>
+                            <p className='col1'>{employee.mobile}</p>
+                            <p className='col1'>{employee.designation}</p>
+                            <p className='col1'>{employee.gender}</p>
+                            <p className='col1'>{employee.course.join(', ')}</p>
+                            <p className='col1'>{new Date(employee.createdAt).toLocaleDateString()}</p>
+                            <p className='status'>
+                                <p className={employee.isActive ? 'active' : 'inactive'}>
+                                    <span className={employee.isActive ? 'dota' : 'dotd'}></span>
+                                    <span>{employee.isActive ? 'Active' : 'Inactive'}</span>
+                                </p>
+                                <button
+                                    className={employee.isActive ? 'deactivate btns' : 'activate btns'}
+                                    onClick={() => toggleStatus(employee._id, employee.isActive)}
+                                    disabled={loadingId === employee._id} // Disable button if loading
+                                >
+                                    {loadingId === employee._id
+                                        ? employee.isActive
+                                            ? 'Deactivating...'
+                                            : 'Activating...'
+                                        : employee.isActive
+                                            ? 'Deactivate'
+                                            : 'Activate'}
+                                </button>
                             </p>
-                            <button
-                                className={employee.isActive ? 'deactivate btns' : 'activate btns'}
-                                onClick={() => toggleStatus(employee._id, employee.isActive)}
-                            >
-                                {employee.isActive ? 'Deactivate' : 'Activate'}
-                            </button>
-                        </p>
-                        <p className='col1 etc'>
-                            <button className='btns' onClick={() => nav(`/employeeedit/${employee._id}`)}>Edit</button>
-                            <button className='btns' onClick={() => deleteEmployee(employee._id)}>Delete</button>
-                        </p>
-                    </>
-                ))}
+                            <p className='col1 etc'>
+                                <button className='btns' onClick={() => nav(`/employeeedit/${employee._id}`)}>Edit</button>
+                                <button
+                                    className="btns"
+                                    onClick={() => deleteEmployee(employee._id)}
+                                    disabled={loadingId1 === employee._id}
+                                >
+                                    {loadingId1 === employee._id ? 'Deleting...' : 'Delete'}
+                                </button>
+                            </p>
+                        </>
+                    )) : ""
+                }
             </div>
             {/* Pagination Controls */}
             <div className='pagination'>

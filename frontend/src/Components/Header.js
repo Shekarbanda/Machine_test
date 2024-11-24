@@ -4,11 +4,15 @@ import './Header.css';
 
 export default function Header() {
     const [menuclick,setmenuclick] = useState(false);
+    const [load,setload] = useState(false);
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        setload(true);
         localStorage.removeItem('username'); 
+        setload(false);
         navigate('/'); 
+        
     };
 
     const name = localStorage.getItem('username');
@@ -23,10 +27,10 @@ export default function Header() {
                 <NavLink className={({ isActive }) => (isActive ? 'link hov underline' : 'link hov') } to="/employeelist">Employee List</NavLink>
                 <div className='profile'>
                     <p className='name'>{name} - </p>
-                    <span className='btn hov' onClick={handleLogout}>Logout</span>
+                    <span className='btn hov' onClick={handleLogout}>{load?"Logging out":"Logout"}</span>
                 </div>
             </nav>
-            <p className={`menu ${menuclick?'cancel':''}`} onClick={()=>setmenuclick(!menuclick)}>{menuclick?`×`:"☰"}</p>
+            <p className={`${menuclick?'cancel':'menu'}`} onClick={()=>setmenuclick(!menuclick)}>{menuclick?`×`:"☰"}</p>
         </header>
     );
 };

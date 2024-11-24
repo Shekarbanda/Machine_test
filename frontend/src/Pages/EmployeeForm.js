@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import api from '../API_URL/api';
 
 const EmployeeForm = () => {
+    const [load,setload] = useState(false);
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -50,6 +52,7 @@ const EmployeeForm = () => {
     
 
     const handleSubmit = async (e) => {
+        setload(true);
         e.preventDefault();
         try {
             const response = await api.post('/employees', formData,{
@@ -69,6 +72,9 @@ const EmployeeForm = () => {
             
         } catch (error) {
             console.error('Error creating employee:', error);
+        }
+        finally{
+            setload(false);
         }
     };
 
@@ -146,7 +152,7 @@ const EmployeeForm = () => {
            <input type="file" name="image" onChange={handleImageChange} accept=".jpg,.png" required />
            </div>
             <div className='btns2'>
-            <button type="submit" className='subbtn'>Submit</button>
+            <button type="submit" className='subbtn'>{load?"Creating...":"Create"}</button>
             <button type="reset" ref={resetButtonRef} className='subbtn'>Reset</button>
             </div>
         </form>

@@ -5,6 +5,8 @@ import Header from '../Components/Header';
 
 export default function EmployeeEdit() {
     const { id } = useParams(); 
+    const [load,setload] = useState(false);
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -66,6 +68,7 @@ export default function EmployeeEdit() {
     };
 
     const handleSubmit = async (e) => {
+        setload(true);
         e.preventDefault();
 
         try {
@@ -80,13 +83,16 @@ export default function EmployeeEdit() {
             console.error('Error updating employee:', error);
             alert('Error updating employee');
         }
+        finally{
+            setload(false);
+        }
     };
 
     return (
         <div className='main'>
             <Header/>
             <div className='body'>
-            <h1 className='head'>Edit Employee</h1>
+            <h1 className='t'>Edit Employee</h1>
             <form className='form' onSubmit={handleSubmit}>
                 <div className='Name'>
                     <label for='name'>Name:</label>
@@ -208,7 +214,7 @@ export default function EmployeeEdit() {
                     </div>
                 </div>
                 <div className='btns2'>
-                    <button type="submit" className='subbtn'>Update</button>
+                    <button type="submit" className='subbtn'>{load?"Updating...":"Update"}</button>
                     <button type="reset" ref={resetButtonRef} className='subbtn'>Reset</button>
                 </div>
             </form>

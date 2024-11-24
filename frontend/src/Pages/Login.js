@@ -8,12 +8,15 @@ export default function Login() {
     const [username, setusername] = useState("");
     const [pass, setpass] = useState("");
     const navigate = useNavigate();
+    const [load,setload] = useState(false);
 
     const handleSubmit = async (e) => {
+        setload(true);
         e.preventDefault();
 
         if (!username || !pass) {
             alert('Both username and password are required');
+            setload(false)
             return;
         }
         const credentials = {
@@ -35,6 +38,9 @@ export default function Login() {
         } catch (error) {
             alert("error occured");
         }
+        finally{
+            setload(false);
+        }
     }
     return (
         <>
@@ -43,9 +49,9 @@ export default function Login() {
                     <h1 className='lo'>LO<span className='go'>GO</span></h1>
                 </div>
             </header>
-            <h2 className='title'>Login</h2>
             <div className='login'>
                 <form className='formdet' onSubmit={handleSubmit}>
+                <h2 className='title'>Login</h2>
                     <div className='username'>
                         <label for='user'>Username:</label>
                         <input type='text' id='user' name='Username' value={username} onChange={(e) => setusername(e.target.value)} placeholder='Enter Username' />
@@ -54,7 +60,7 @@ export default function Login() {
                         <label for='pass'>Password:</label>
                         <input type='password' id='pass' name='password' value={pass} onChange={(e) => setpass(e.target.value)} placeholder='Enter Password' />
                     </div>
-                    <button className='loginbtn' type='submit'>Login</button>
+                    <button className='loginbtn' type='submit'>{load?"Loading...":"Login"}</button>
                 </form>
             </div>
         </>

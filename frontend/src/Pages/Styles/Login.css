@@ -7,19 +7,18 @@
     background-color: rgb(233, 237, 245);
 }
 .title{
-    position: absolute;
-    top: 20%;
-    left: 47%;
     font-size: 2rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .formdet{
-    width: 45vw;
+    padding: 100px;
     display: flex;
     flex-direction: column;
     gap: 20px;
     padding: 50px;
-    height: 40vh;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    height: max-content;
     align-items: center;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 6px 20px;
     border-radius: 10px;
@@ -76,11 +75,15 @@ label{
     .formdet{
         width: 90vw;
         padding: 15px;
-        height: 30vh;
-        padding-top: 30px;
     }
     .username{
         gap: 10px;
+    }
+    #user{
+        font-size: 1rem;
+    }
+    #pass{
+        font-size: 1rem;
     }
     
     .password{
