@@ -5,7 +5,7 @@ import './Header.css';
 export default function Header() {
     const [menuclick,setmenuclick] = useState(false);
     const [load,setload] = useState(false);
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     const handleLogout = () => {
         setload(true);
@@ -16,7 +16,6 @@ export default function Header() {
     };
 
     const name = localStorage.getItem('username');
-
     return (
         <header className="header">
             <div className="logo">
