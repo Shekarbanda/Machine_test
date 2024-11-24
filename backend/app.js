@@ -9,7 +9,7 @@ const app = express();
 connectDB();
 app.use(
     cors({
-        origin: 'http://localhost:3000',
+        origin: 'https://employee-management-system-frontend-15su.onrender.com',
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
