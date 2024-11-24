@@ -5,8 +5,8 @@ import api from '../API_URL/api';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-    const [username, setusername] = useState("");
-    const [pass, setpass] = useState("");
+    const [username, setusername] = useState("admin");
+    const [pass, setpass] = useState("admin123@");
     const navigate = useNavigate();
     const [load,setload] = useState(false);
 
