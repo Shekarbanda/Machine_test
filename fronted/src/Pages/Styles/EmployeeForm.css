@@ -1,0 +1,159 @@
+.body{
+    padding-top: 4.1rem;
+}
+.t{
+    padding-left: 20px;
+    padding-top: 5px;
+    color: black;
+    text-decoration: underline;
+    text-decoration-color: rgb(42, 109, 242);
+    background-color: rgb(137, 168, 178);
+    padding-bottom: 5px;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+   margin-left: 50px;
+    gap: 25px;
+   margin-left: 35%;
+    margin-top: 3rem;
+    padding-bottom: 70px;
+}
+.Name{
+    display: flex;
+    gap: 70px;
+    align-items: center;
+}
+input[type='text']{
+    width: 40%;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 1.2rem;
+}
+.Email{
+    display: flex;
+    gap: 74px;
+    align-items: center;
+}
+.Mobile{
+    display: flex;
+    gap: 35px;
+    align-items: center;
+}
+.desg{
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+select{
+    width: 40%;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 1.2rem;
+}
+.gen{
+    display: flex;
+    gap: 70px;
+    align-items: center;
+}
+.rad{
+    display: flex;
+    gap: 20px;
+}
+.cos{
+    align-items: center;
+    display: flex;
+    gap: 70px;
+}
+.imgup{
+    display: flex;
+    gap: 35px;
+    align-items: center;
+}
+.subbtn{
+    width: 20%;
+    padding: 5px;
+    text-align: center;
+    margin-left: 4%;
+    font-size: 1.1rem;
+    font-weight: 500;
+    background-color:rgb(85, 173, 73) ;
+    border: none;
+    border-radius: 5px;
+}
+.subbtn:hover{
+    box-shadow: 0px 0px 6px 3px rgb(85, 173, 73);
+    cursor: pointer;
+}
+.btns2{
+    display: flex;
+    gap: 5px;
+    margin-top: 30px;
+}
+
+@media (max-width:770px){
+    .form{
+       margin-left: 5%;
+      
+    }
+    input[type='text']{
+        width: 50%;
+        border-radius: 5px;
+        padding: 2px;
+        font-size: 1rem;
+    }
+    .Name{
+        display: flex;
+        gap: 30px;
+    }
+    .Email{
+        display: flex;
+        gap: 34px;
+    }
+    .Mobile{
+        display: flex;
+        gap: 15px;
+    }
+    .desg{
+        display: flex;
+        gap: 12px;
+    }
+    input[type="file"]{
+        width: 180px;
+    }
+    select{
+        width: 40%;
+        border-radius: 5px;
+        padding: 2px;
+        font-size: 1rem;
+    }
+    .gen{
+        display: flex;
+        gap: 30px;
+    }
+    .rad{
+        display: flex;
+        gap: 10px;
+    }
+    .cos{
+        
+        display: flex;
+        gap: 30px;
+    }
+    .imgup{
+        display: flex;
+        gap: 20px;
+    }
+    .subbtn{
+        width: 100%;
+        margin-left: 15%;   
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .btns2{
+        display: flex;
+        gap: 5px;
+        width: 50%;
+    }
+}

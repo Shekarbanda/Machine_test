@@ -1,0 +1,8 @@
+.dashboard{
+    padding-top: 4.5rem;
+    background-color: rgb(233, 237, 245);
+    height: 100vh;
+    text-align: center;
+    font-size: 2rem;
+    color: rgb(42, 109, 242);
+}

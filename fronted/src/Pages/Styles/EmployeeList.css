@@ -1,0 +1,223 @@
+
+.list{
+    padding-top: 4.1rem;
+    background-color: rgb(233, 237, 245);
+    
+}
+.main{
+    background-color: rgb(233, 237, 245);
+}
+
+.head{
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: black;
+    text-decoration: underline;
+    text-decoration-color: rgb(42, 109, 242);
+    background-color: rgb(137, 168, 178);
+}
+.first{
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    gap: 30px;
+    align-items: center;
+    padding: 10px;
+}
+.count{
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.createbtn{
+    background-color:rgb(85, 173, 73) ;
+    border: none;
+    border-radius: 8px;
+    padding: 5px;
+    padding-right: 12px;
+    padding-left: 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.createbtn:hover{
+    box-shadow: 0px 0px 6px 3px rgb(85, 173, 73) ;
+    cursor: pointer;
+}
+.data{
+    display: grid;
+    grid-template-columns: repeat(11,1fr);
+    overflow-x: auto; 
+    margin: 5px;
+    border-radius: 5px;
+    will-change: scroll-position; /* Optimize scrolling performance */
+    backface-visibility: hidden;
+}
+.search{
+    grid-column-start: 9;
+    grid-column-end: 12;
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    padding: 8px;
+    background-color: rgb(133, 169, 243);
+    align-items: center;
+}
+.tit{
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+.sinput{
+    width: 100%;
+    padding: 3px;
+    border-radius: 5px;
+    padding-left: 5px;
+    font-size: 1rem;
+}
+.sort{
+    grid-column: 5/9;
+    background-color: rgb(133, 169, 243);
+    align-items: center;
+}
+.emp{
+    grid-column: 1/5;
+    background-color: rgb(133, 169, 243);
+}
+.sel{
+    width: 60%;
+    padding: 3px;
+    height: 2.1rem;
+    cursor: pointer;
+}
+.col{
+    padding: 10px;
+    font-weight: 500;
+    border: 1px solid rgba(0, 0, 0, 0.489);
+    background-color: rgb(133, 169, 243);
+    text-align: center;
+}
+.imgdiv{
+    width: 100%;
+    padding: 3px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.489);
+    border-right: 1px solid rgba(0, 0, 0, 0.489);
+    border-left: 1px solid rgba(0, 0, 0, 0.489);
+    text-align: center;
+}
+
+.col1{
+    padding: 10px;
+    text-align: center;
+    background-color: rgb(233, 237, 245);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.489);
+    border-right: 1px solid rgba(0, 0, 0, 0.489);
+    border-left: 1px solid rgba(0, 0, 0, 0.489);
+    line-height: 50px;
+}
+.etc{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.status{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px;
+    text-align: center;
+    background-color: rgb(233, 237, 245);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.489);
+    border-right: 1px solid rgba(0, 0, 0, 0.489);
+    border-left: 1px solid rgba(0, 0, 0, 0.489);
+}
+.btns{
+    height: 1.5rem;
+    background-color:rgb(160, 189, 246);
+    border: none;
+    border-radius: 3px;
+    padding: 3px;
+    padding-right: 8px;
+    padding-left: 8px;
+    font-weight: 500;
+}
+.btns:hover{
+    box-shadow: 0px 0px 4px 2px rgb(160, 189, 246) ;
+    cursor: pointer;
+}
+.active{
+    color: green;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+.inactive{
+    color: red;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+.dota{
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    bottom: 33%;
+    left: 22%;
+    background-color: green;
+}
+.dotd{
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    bottom: 33%;
+    left: 22%;
+    background-color: red;
+}
+.activate{
+    color: white;
+    background-color: green;
+}
+.deactivate{
+    color: white;
+    background-color: red;
+}
+
+.data:last-child{
+    border-bottom: none;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding-bottom: 30px;
+}
+
+.pagebtn {
+    margin: 0 10px;
+    padding: 5px 15px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.pagebtn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagenum {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+@media (max-width:1208px){
+    .col1{
+        line-height: 30px;
+    }
+}
