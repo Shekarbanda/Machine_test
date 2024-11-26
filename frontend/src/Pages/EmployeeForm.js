@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../API_URL/api';
 
 const EmployeeForm = () => {
-    const [load,setload] = useState(false);
+    const [load, setLoad] = useState(false);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -16,14 +16,15 @@ const EmployeeForm = () => {
         course: [],
         image: null,
     });
+
     const initialFormData = {
         name: '',
         email: '',
         mobile: '',
         designation: '',
         gender: '',
-        course: '',
-        image: '', 
+        course: [],
+        image: null,
     };
 
     const navigate = useNavigate();
@@ -32,49 +33,57 @@ const EmployeeForm = () => {
     useEffect(() => {
         const username = localStorage.getItem('username');
         if (!username) {
-            navigate('/'); 
+            navigate('/');
         }
     }, [navigate]);
 
+    // Handle image selection and set as File object
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData({
-                    ...formData,
-                    image: reader.result, 
-                });
-            };
-            reader.readAsDataURL(file);
+            setFormData({
+                ...formData,
+                image: file, // Directly set the File object
+            });
         }
     };
-    
 
     const handleSubmit = async (e) => {
-        setload(true);
+        setLoad(true);
         e.preventDefault();
+
         try {
-            const response = await api.post('/employees', formData,{
-                withCredentials:true
+            const data = new FormData(); // Create FormData object
+            data.append('name', formData.name);
+            data.append('email', formData.email);
+            data.append('mobile', formData.mobile);
+            data.append('designation', formData.designation);
+            data.append('gender', formData.gender);
+            data.append('course', formData.course); // Convert array to string
+            if (formData.image) {
+                data.append('image', formData.image); // Append the image
+            }
+
+            const response = await api.post('/employees', data, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                withCredentials: true,
             });
+
             if (response.status === 200) {
                 setFormData(initialFormData);
                 if (resetButtonRef.current) {
                     resetButtonRef.current.click();
                 }
                 alert('Employee created successfully');
-                navigate('/employeelist')
-            }
-            else{
+                navigate('/employeelist');
+            } 
+            else {
                 alert(response.data.message);
             }
-            
         } catch (error) {
-            console.error('Error creating employee:', error);
-        }
-        finally{
-            setload(false);
+            alert(error);
+        } finally {
+            setLoad(false);
         }
     };
 

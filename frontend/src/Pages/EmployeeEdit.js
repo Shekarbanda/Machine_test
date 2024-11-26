@@ -4,9 +4,8 @@ import api from '../API_URL/api';
 import Header from '../Components/Header';
 
 export default function EmployeeEdit() {
-    const { id } = useParams(); 
-    const [load,setload] = useState(false);
-
+    const { id } = useParams();
+    const [load, setLoad] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -14,11 +13,13 @@ export default function EmployeeEdit() {
         designation: '',
         gender: '',
         course: [],
-        image: '', 
+        image: null, // This will store the file object for the image
     });
-    const resetButtonRef = useRef();
-    const navigate = useNavigate();
 
+    const navigate = useNavigate();
+    const [imagePreview, setImagePreview] = useState(null);
+
+    // Fetch employee data on component mount
     useEffect(() => {
         const fetchEmployee = async () => {
             try {
@@ -38,53 +39,69 @@ export default function EmployeeEdit() {
         fetchEmployee();
     }, [id]);
 
+    // Handle form data changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'course') {
+            // Handle multi-checkbox for course selection
             setFormData((prev) => ({
                 ...prev,
                 course: prev.course.includes(value)
-                    ? prev.course.filter((item) => item !== value) 
-                    : [...prev.course, value], 
+                    ? prev.course.filter((item) => item !== value)
+                    : [...prev.course, value],
             }));
         } else {
             setFormData({ ...formData, [name]: value });
         }
     };
 
-
+    // Handle image file change
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData((prev) => ({
-                    ...prev,
-                    image: reader.result, 
-                }));
-            };
-            reader.readAsDataURL(file);
+            setFormData({
+                ...formData,
+                image: file, // Store file object for image
+            });
+            setImagePreview(URL.createObjectURL(file));
         }
     };
 
+    // Handle form submission
     const handleSubmit = async (e) => {
-        setload(true);
         e.preventDefault();
+        setLoad(true);
+
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('email', formData.email);
+        data.append('mobile', formData.mobile);
+        data.append('designation', formData.designation);
+        data.append('gender', formData.gender);
+        data.append('course', formData.course); // Convert array to string
+
+        if (formData.image) {
+            data.append('image', formData.image); // Append the image file if provided
+        } else if (formData.image === null && imagePreview) {
+            data.append('image', imagePreview); // Send the existing image URL if no new image is selected
+        }
 
         try {
-            const response = await api.put(`/employees/${id}`, formData);
+            const response = await api.put(`/employees/${id}`, data, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
             if (response.status === 200) {
                 alert('Employee updated successfully');
-                navigate('/employeelist'); 
+                navigate('/employeelist');
             } else {
-                alert('Failed to update employee');
+                alert(response.data.message);
             }
         } catch (error) {
-            console.error('Error updating employee:', error);
-            alert('Error updating employee');
-        }
-        finally{
-            setload(false);
+            alert('Error ',error);
+            console.log(error);
+        } finally {
+            setLoad(false);
         }
     };
 
@@ -204,7 +221,7 @@ export default function EmployeeEdit() {
                 <div className='imgmain' style={{display:'flex',height:'50px',alignItems:'center',gap:'10px'}}>
                     <label for='image'>Image Upload:</label>
                     <div className='imgup' style={{display:'flex',gap:'5px'}}>
-                    <img src={formData.image}  className='imge' width={50} height={50}/>
+                    <img src={imagePreview?imagePreview:`http://localhost:5000/${formData.image}`} className='imge' width={50} height={50}/>
                     <input
                         type="file"
                         name="image"
@@ -215,7 +232,6 @@ export default function EmployeeEdit() {
                 </div>
                 <div className='btns2'>
                     <button type="submit" className='subbtn'>{load?"Updating...":"Update"}</button>
-                    <button type="reset" ref={resetButtonRef} className='subbtn'>Reset</button>
                 </div>
             </form>
             </div>

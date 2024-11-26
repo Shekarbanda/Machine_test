@@ -161,7 +161,7 @@ export default function EmployeeList() {
                             <p className='col1'>{((page - 1) * 10) + employees.indexOf(employee) + 1}</p>
                             <div className='imgdiv'>
                                 <img
-                                    src={employee.image}
+                                    src={`http://localhost:5000/${employee.image}`}
                                     className='img'
                                     alt='profile-pic'
                                     width={70}

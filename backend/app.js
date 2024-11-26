@@ -4,6 +4,7 @@ const connectDB = require('./Database/db');
 const authRoutes = require('./Routes/auth');
 const employeeRoutes = require('./Routes/employees');
 const bodyParser = require('body-parser');
+const path = require('path')
 
 const app = express();
 connectDB();
@@ -16,11 +17,13 @@ app.use(
     })
 );
 app.use(express.json());
-app.use(bodyParser.json({ limit: '100mb' }));
-app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+app.use(express.json({ limit: 'Infinity' }));
+app.use(express.urlencoded({ limit: 'Infinity', extended: true }));
 
+app.use('/Uploaded_Images', express.static(path.join(__dirname, 'Uploaded_Images')));
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
