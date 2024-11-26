@@ -221,7 +221,7 @@ export default function EmployeeEdit() {
                 <div className='imgmain' style={{display:'flex',height:'50px',alignItems:'center',gap:'10px'}}>
                     <label for='image'>Image Upload:</label>
                     <div className='imgup' style={{display:'flex',gap:'5px'}}>
-                    <img src={imagePreview?imagePreview:`http://localhost:5000/${formData.image}`} className='imge' width={50} height={50}/>
+                    <img src={imagePreview?imagePreview:`https://employee-management-system-backend-nvdf.onrender.com/${formData.image}`} className='imge' width={50} height={50}/>
                     <input
                         type="file"
                         name="image"
