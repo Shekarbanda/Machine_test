@@ -78,12 +78,14 @@ export default function EmployeeEdit() {
         data.append('mobile', formData.mobile);
         data.append('designation', formData.designation);
         data.append('gender', formData.gender);
-        data.append('course', formData.course); // Convert array to string
+        formData.course.forEach((item) => {
+            data.append('course', item); // Append each item separately
+          }); 
 
         if (formData.image) {
-            data.append('image', formData.image); // Append the image file if provided
+            data.append('image', formData.image); 
         } else if (formData.image === null && imagePreview) {
-            data.append('image', imagePreview); // Send the existing image URL if no new image is selected
+            data.append('image', imagePreview); 
         }
 
         try {
