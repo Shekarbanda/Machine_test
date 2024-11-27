@@ -59,9 +59,12 @@ const EmployeeForm = () => {
             data.append('mobile', formData.mobile);
             data.append('designation', formData.designation);
             data.append('gender', formData.gender);
-            data.append('course', formData.course); // Convert array to string
+            formData.course.forEach((item) => {
+            data.append('course', item); 
+          }); 
+            
             if (formData.image) {
-                data.append('image', formData.image); // Append the image
+                data.append('image', formData.image); 
             }
 
             const response = await api.post('/employees', data, {
