@@ -174,7 +174,9 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         if (mobile && mobile !== employee.mobile) updatedData.mobile = mobile;
         if (designation && designation !== employee.designation) updatedData.designation = designation;
         if (gender && gender !== employee.gender) updatedData.gender = gender;
-        if (course && JSON.stringify(course) !== JSON.stringify(employee.course)) updatedData.course = course;
+         if (course) {
+            updatedData.course = course; 
+          }
 
         // If a new image is uploaded, update the image field
         if (image && image !== employee.image) updatedData.image = image;
