@@ -1,5 +1,5 @@
 const express = require('express');
-const Employee = require('../Models/Employee'); // Ensure the correct path to your Employee model
+const Employee = require('../Models/Employee'); 
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
@@ -8,7 +8,6 @@ const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const isValidMobile = (mobile) => /^[0-9]{10}$/.test(mobile);
 const MAX_IMAGE_SIZE = 50000 * 1024 * 1024;
 
-// Create a new employee
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'Uploaded_Images/'); 
@@ -24,13 +23,21 @@ const fileFilter = (req, file, cb) => {
     const allowedTypes = ['image/png', 'image/jpeg'];
   
     if (allowedTypes.includes(file.mimetype)) {
+<<<<<<< HEAD
       cb(null, true); 
     } else {
       cb(new Error('Invalid file type. Only PNG and JPG are allowed.'), false);
     }
   };
+=======
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only PNG and JPG are allowed.'), false); // Reject the file
+    }
+  };
 
-// Multer instance with limits
+>>>>>>> df8015d (Updated frontend and backend for course management functionality)
+
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
@@ -43,7 +50,6 @@ router.post('/', (req, res) => {
         const { name, email, mobile, designation, gender, course } = req.body;
 
         try {
-            // Handle Multer errors
             if (err instanceof multer.MulterError) {
                 return res.status(201).json({ message: 'File upload error', error: err.message });
             }
@@ -51,7 +57,6 @@ router.post('/', (req, res) => {
                 return res.status(201).json({ message: err.message });
             }
 
-            // Validate required fields
             if (!name || !email || !mobile || !designation || !gender || !course) {
                 return res.status(201).json({ message: 'All fields are required' });
             }
@@ -72,7 +77,6 @@ router.post('/', (req, res) => {
                 return res.status(201).json({ message: 'Email already exists' });
             }
 
-            // Create a new employee object
             const newEmployee = new Employee({
                 name,
                 email,
@@ -80,10 +84,9 @@ router.post('/', (req, res) => {
                 designation,
                 gender,
                 course,
-                image: req.file ? req.file.path : null, // Store file path if image exists
+                image: req.file ? req.file.path : null, 
             });
 
-            // Save to database
             const savedEmployee = await newEmployee.save();
 
             return res.status(200).json({
@@ -92,7 +95,6 @@ router.post('/', (req, res) => {
             });
         } 
         catch (error) {
-            // Handle unexpected errors
             return res.status(500).json({
                 message: 'An unexpected error occurred',
                 error: error.message,
@@ -157,16 +159,15 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', upload.single('image'), async (req, res) => {
     const { id } = req.params;
     const { name, email, mobile, designation, gender, course } = req.body;
-    let image = req.file ? req.file.path : null; // Get the image path if file is uploaded
+    let image = req.file ? req.file.path : null;
 
     try {
-        // Fetch the employee's current data
+        // Fetching the employee's current data
         const employee = await Employee.findById(id);
         if (!employee) {
             return res.status(404).json({ message: 'Employee not found' });
         }
 
-        // Prepare the update object, only updating fields that have changed
         const updatedData = {};
 
         if (name && name !== employee.name) updatedData.name = name;
@@ -174,23 +175,22 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         if (mobile && mobile !== employee.mobile) updatedData.mobile = mobile;
         if (designation && designation !== employee.designation) updatedData.designation = designation;
         if (gender && gender !== employee.gender) updatedData.gender = gender;
+<<<<<<< HEAD
          if (course) {
             updatedData.course = course; 
+=======
+        if (course) {
+            updatedData.course = course;
+>>>>>>> df8015d (Updated frontend and backend for course management functionality)
           }
 
-        // If a new image is uploaded, update the image field
         if (image && image !== employee.image) updatedData.image = image;
 
-        // If no fields are updated, return a message
         if (Object.keys(updatedData).length === 0) {
             return res.status(400).json({ message: 'No fields to update' });
         }
 
-        // Update the employee with the new data
         const updatedEmployee = await Employee.findByIdAndUpdate(id, updatedData, { new: true });
-
-
-
         if (!updatedEmployee) {
             return res.status(201).json({ message: 'Employee not found' });
         }
@@ -201,6 +201,42 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         res.status(500).json({ message: 'Error updating employee', error });
     }
 });
+
+router.post('/course', async (req, res) => {
+    const { oldc, newc } = req.body;
+
+    try {
+        const result = await Employee.updateMany(
+            { course: oldc },
+            { $set: { "course.$[elem]": newc } }, 
+            {
+                arrayFilters: [{ elem: oldc }], 
+                multi: true, 
+            }
+        );
+
+    } catch (e) {
+        console.error('Error updating courses:', e);
+        res.status(500).json({ message: "Error updating courses" });
+    }
+});
+
+//delete course
+router.post('/course/delete', async (req, res) => {
+    const {course } = req.body;
+
+    try {
+        const result = await Employee.updateMany(
+            { course: course },       
+            { $pull: { course: course } } 
+        );
+    } catch (e) {
+        console.error('Error updating courses:', e);
+        res.status(500).json({ message: "Error updating courses" });
+    }
+});
+
+
 
 // Update employee active/inactive status
 router.put('/:id/status', async (req, res) => {
@@ -228,5 +264,6 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ message: 'Error deleting employee', error });
     }
 });
+
 
 module.exports = router;

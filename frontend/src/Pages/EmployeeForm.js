@@ -6,6 +6,7 @@ import api from '../API_URL/api';
 
 const EmployeeForm = () => {
     const [load, setLoad] = useState(false);
+    const [allcourses,setallcourses]=useState([])
 
     const [formData, setFormData] = useState({
         name: '',
@@ -43,7 +44,7 @@ const EmployeeForm = () => {
         if (file) {
             setFormData({
                 ...formData,
-                image: file, // Directly set the File object
+                image: file, 
             });
         }
     };
@@ -53,7 +54,7 @@ const EmployeeForm = () => {
         e.preventDefault();
 
         try {
-            const data = new FormData(); // Create FormData object
+            const data = new FormData(); 
             data.append('name', formData.name);
             data.append('email', formData.email);
             data.append('mobile', formData.mobile);
@@ -90,17 +91,45 @@ const EmployeeForm = () => {
         }
     };
 
+    
+    useEffect(() => {
+
+        const fetchcourses = async () => {
+            try {
+                const response = await api.get('/coursemaster');
+                console.log(response.data.courses)
+                if (response.status==200) {
+                    setallcourses(response.data.courses);
+                }
+                else{
+                    alert("failed")
+                }
+            } catch (error) {
+                console.error('Error fetching employee data:', error);
+            }
+        };
+
+        fetchcourses();
+    }, []);
+
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name === 'course') {
+        const { name, value, type, checked } = e.target;
+    
+        if (type === 'checkbox') {
             setFormData((prev) => ({
                 ...prev,
-                course: [...prev.course, value],
+                course: checked
+                    ? [...prev.course, value] 
+                    : prev.course.filter((item) => item !== value), 
             }));
         } else {
-            setFormData({ ...formData, [name]: value });
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
         }
     };
+    
 
     return (
         <div className='main'>
@@ -145,18 +174,14 @@ const EmployeeForm = () => {
             <div className='cos'>
                 <label>Course</label>
                 <div className='rad'>
-                <label>
-                    <input type="checkbox" name="course" value="MCA" onChange={handleChange} />
-                    MCA
+                {allcourses?.map((c, index) => (
+                    <React.Fragment key={index}>
+                        <label>
+                    <input type="checkbox" name={c.course} value={c.course} onChange={handleChange} />
+                    {c.course}
                 </label>
-                <label>
-                    <input type="checkbox" name="course" value="BCA" onChange={handleChange} />
-                    BCA
-                </label>
-                <label>
-                    <input type="checkbox" name="course" value="BSC" onChange={handleChange} />
-                    BSC
-                </label>
+                    </React.Fragment>
+                ))}
                 </div>
             </div>
            <div className='imgup'>

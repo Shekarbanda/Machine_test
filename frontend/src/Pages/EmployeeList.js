@@ -4,6 +4,7 @@ import './Styles/EmployeeList.css';
 import { useNavigate } from 'react-router-dom';
 import api from '../API_URL/api';
 
+
 export default function EmployeeList() {
     const nav = useNavigate();
     const [load, setload] = useState(false);
@@ -63,7 +64,6 @@ export default function EmployeeList() {
                 isActive: !currentStatus,
             });
             if (response.status === 200) {
-                // Update employee status locally
                 setEmployees((prev) =>
                     prev.map((employee) =>
                         employee._id === employeeId
@@ -75,7 +75,7 @@ export default function EmployeeList() {
         } catch (error) {
             console.error('Error toggling status:', error);
         } finally {
-            setLoadingId(null); // Clear loading state for the button
+            setLoadingId(null); 
         }
     };
 
@@ -114,10 +114,13 @@ export default function EmployeeList() {
             <Header />
             <div className='list'>
                 <h1 className='head'>Employee List</h1>
+                
             </div>
             <hr />
             <div className='first'>
+            <p className='createbtn' onClick={() => nav('/coursemaster')}>Course Master</p>
                 <p className='count'>Total Count : {totalCount}</p>
+               
                 <button className='createbtn' onClick={() => nav('/employeeform')}>Create Employee</button>
             </div>
             <div className='data'>
@@ -183,8 +186,7 @@ export default function EmployeeList() {
                                 <button
                                     className={employee.isActive ? 'deactivate btns' : 'activate btns'}
                                     onClick={() => toggleStatus(employee._id, employee.isActive)}
-                                    disabled={loadingId === employee._id} // Disable button if loading
-                                >
+                                    disabled={loadingId === employee._id} >
                                     {loadingId === employee._id
                                         ? employee.isActive
                                             ? 'Deactivating...'

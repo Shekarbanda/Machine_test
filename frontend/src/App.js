@@ -5,6 +5,7 @@ import EmployeeForm from './Pages/EmployeeForm';
 import EmployeeEdit from './Pages/EmployeeEdit';
 import Dashboard from './Pages/Dashboard';
 import Login from './Pages/Login';
+import CourseMaster from './Pages/CourseMaster';
 
 const App = () => {
     return (
@@ -15,6 +16,7 @@ const App = () => {
                 <Route path='/employeelist' element={<EmployeeList/>} />
                 <Route path='/employeeform' element={<EmployeeForm/>} />
                 <Route path='/employeeedit/:id' element={<EmployeeEdit/>} />
+                <Route path='/coursemaster' element={<CourseMaster/>}/>
             </Routes>
         </BrowserRouter>
     );

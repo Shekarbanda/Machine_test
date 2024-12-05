@@ -2,10 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../API_URL/api';
 import Header from '../Components/Header';
+import { useDispatch, useSelector } from 'react-redux';
+import { getcourses } from '../Redux/Slices/CourseSlice';
 
 export default function EmployeeEdit() {
     const { id } = useParams();
     const [load, setLoad] = useState(false);
+    const dispatch = useDispatch();
+    const allcourses = useSelector((state)=>state.cor.courses);
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -13,13 +18,35 @@ export default function EmployeeEdit() {
         designation: '',
         gender: '',
         course: [],
-        image: null, // This will store the file object for the image
+        image: null, 
     });
+
+    useEffect(() => {
+
+        const fetchcourses = async () => {
+            try {
+                const response = await api.get('/coursemaster');
+                console.log(response.data.courses)
+                if (response.status==200) {
+                    dispatch(getcourses(response.data.courses));
+                }
+                else{
+                    alert("failed")
+                }
+            } catch (error) {
+                console.error('Error fetching employee data:', error);
+            }
+            
+        };
+
+        fetchcourses();
+    }, []);
+
 
     const navigate = useNavigate();
     const [imagePreview, setImagePreview] = useState(null);
 
-    // Fetch employee data on component mount
+    // Fetch employee data
     useEffect(() => {
         const fetchEmployee = async () => {
             try {
@@ -39,29 +66,31 @@ export default function EmployeeEdit() {
         fetchEmployee();
     }, [id]);
 
-    // Handle form data changes
+ 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name === 'course') {
-            // Handle multi-checkbox for course selection
+        const { name, value, type, checked } = e.target;
+    
+        if (type === 'checkbox') {
             setFormData((prev) => ({
                 ...prev,
-                course: prev.course.includes(value)
-                    ? prev.course.filter((item) => item !== value)
-                    : [...prev.course, value],
+                course: checked
+                    ? [...prev.course, value] 
+                    : prev.course.filter((item) => item !== value), 
             }));
         } else {
-            setFormData({ ...formData, [name]: value });
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
         }
     };
 
-    // Handle image file change
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setFormData({
                 ...formData,
-                image: file, // Store file object for image
+                image: file, 
             });
             setImagePreview(URL.createObjectURL(file));
         }
@@ -188,36 +217,15 @@ export default function EmployeeEdit() {
                 <div className='cos'>
                     <label>Course:</label>
                     <div className='rad'>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="course"
-                                value="MCA"
-                                checked={formData.course.includes('MCA')}
-                                onChange={handleChange}
-                            />
-                            MCA
+                    {allcourses?.map((c, index) => (
+                        <React.Fragment key={index}>
+                            <label>
+                        <input type="checkbox" name={c.course} value={c.course} checked={formData.course.includes(c.course)}
+                                onChange={handleChange}/>
+                        {c.course}
                         </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="course"
-                                value="BCA"
-                                checked={formData.course.includes('BCA')}
-                                onChange={handleChange}
-                            />
-                            BCA
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="course"
-                                value="BSC"
-                                checked={formData.course.includes('BSC')}
-                                onChange={handleChange}
-                            />
-                            BSC
-                        </label>
+                        </React.Fragment>
+                    ))}
                     </div>
                 </div>
                 <div className='imgmain' style={{display:'flex',height:'50px',alignItems:'center',gap:'10px'}}>
@@ -228,7 +236,7 @@ export default function EmployeeEdit() {
                         type="file"
                         name="image"
                         onChange={handleImageChange}
-                        accept=".jpg,.png"
+                       
                     />
                     </div>
                 </div>
