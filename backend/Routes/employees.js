@@ -23,20 +23,11 @@ const fileFilter = (req, file, cb) => {
     const allowedTypes = ['image/png', 'image/jpeg'];
   
     if (allowedTypes.includes(file.mimetype)) {
-<<<<<<< HEAD
       cb(null, true); 
     } else {
       cb(new Error('Invalid file type. Only PNG and JPG are allowed.'), false);
     }
   };
-=======
-      cb(null, true);
-    } else {
-      cb(new Error('Invalid file type. Only PNG and JPG are allowed.'), false); // Reject the file
-    }
-  };
-
->>>>>>> df8015d (Updated frontend and backend for course management functionality)
 
 const upload = multer({
     storage: storage,
@@ -175,13 +166,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         if (mobile && mobile !== employee.mobile) updatedData.mobile = mobile;
         if (designation && designation !== employee.designation) updatedData.designation = designation;
         if (gender && gender !== employee.gender) updatedData.gender = gender;
-<<<<<<< HEAD
          if (course) {
             updatedData.course = course; 
-=======
-        if (course) {
-            updatedData.course = course;
->>>>>>> df8015d (Updated frontend and backend for course management functionality)
           }
 
         if (image && image !== employee.image) updatedData.image = image;
